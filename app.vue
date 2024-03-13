@@ -70,6 +70,24 @@
         </div>
       </UCard>
     </div>
+    <footer class="fixed bottom-0 w-[100vw]">
+      <UCard :ui="{
+        rounded: 'rounded-none rounded-t-lg',
+        body: {
+          padding: 'px-3 py-4 sm:p-4'
+        }
+      }">
+        <p class="flex justify-center">
+          <UButton :padded="true" color="gray" variant="link" target="_blank" to="https://wukaipeng.com/">
+            吴楷鹏 &copy; {{ new Date().getFullYear() }}
+          </UButton>
+          <UButton :padded="true" color="gray" variant="link" target="_blank" to="https://wukaipeng.com/">|</UButton>
+          <UButton :padded="true" color="gray" variant="link" target="_blank"
+            to="https://github.com/Penggeor/mul-search">
+            GitHub</UButton>
+        </p>
+      </UCard>
+    </footer>
   </div>
 </template>
 <script lang="tsx" setup>
