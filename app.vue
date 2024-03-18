@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <UContainer>
     <UNotifications />
     <div class="flex flex-col items-center mt-[10vh] mb-[5vh]">
       <UInputMenu type="text" v-model="selected" :query="q" size="xl" :ui="{ icon: { trailing: { pointer: '' } } }"
-        placeholder="输入搜索关键词" icon="i-heroicons-magnifying-glass-20-solid" class="w-[50vw]" :color="inputColor"
-        @input="handleInputChange" nullable :search="search" :loading="loading" option-attribute="value"
-        :search-attributes="['value']" autofocus :debounce="0" @update:query="handleUpdateQuery"
-        :popper="{ open: true }">
+        placeholder="输入搜索关键词" icon="i-heroicons-magnifying-glass-20-solid" class="w-[80%] max-w-[700px]"
+        :color="inputColor" @input="handleInputChange" nullable :search="search" :loading="loading"
+        option-attribute="value" :search-attributes="['value']" autofocus :debounce="0"
+        @update:query="handleUpdateQuery" :popper="{ open: true }">
         <template #trailing>
           <UButton v-show="q || selected?.value" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid"
             :padded="false" @click="clear" />
@@ -26,35 +26,51 @@
           </div>
         </template>
       </UInputMenu>
-      <!-- <UPopover v-model:open="open">
-        <div></div>
-        <template #panel>
-          <div class="p-4">
-            hhhhh
-          </div>
-        </template>
-      </UPopover> -->
     </div>
-    <div class="flex justify-center">
-      单引擎搜索：
-    </div>
-    <div class="search-engine-card">
+
+    <UDivider label="搜索引擎" />
+    <div class="flex flex-wrap gap-5 justify-center my-10">
       <template v-for="searchEngine in singularSearchEngines" :key="searchEngine.id">
         <UChip :show="!!searchEngine.chip" :text="searchEngine.chip?.text" :size="searchEngine.chip?.size">
-          <UCard @click="enableOpen(openInNewTab)(searchEngine.id)" class="card">
-            <!-- <component :is="searchEngine.logo" /> -->
-            <!-- <IconGoogleLogoSvg /> -->
-            <!-- {{ searchEngine.logo }} -->
+          <UButton @click="enableOpen(openInNewTab)(searchEngine.id)" size="xl" color="primary" variant="outline">
             <div class="flex justify-center">
               {{ searchEngine.title }}
             </div>
-          </UCard>
+            <template v-for="(badge, index) in searchEngine.badges" :key="index">
+              <UTooltip>
+                <template #text>
+                  {{ badge.tooltip }}
+                </template>
+                <UBadge>{{ badge.label }}</UBadge>
+              </UTooltip>
+            </template>
+          </UButton>
         </UChip>
       </template>
     </div>
-    <div class="flex justify-center mt-[5vh]">
-      多引擎搜索：
+
+    <UDivider label="垂直平台" />
+    <div class="flex flex-wrap gap-5 justify-center my-10">
+      <template v-for="platform in verticalPlatforms" :key="platform.id">
+        <UChip :show="!!platform.chip" :text="platform.chip?.text" :size="platform.chip?.size">
+          <UButton @click="enableOpen(openInNewTab)(platform.id)" size="xl" color="primary" variant="outline">
+            <div class="flex justify-center">
+              {{ platform.title }}
+            </div>
+            <template v-for="(badge, index) in platform.badges" :key="index">
+              <UTooltip>
+                <template #text>
+                  {{ badge.tooltip }}
+                </template>
+                <UBadge>{{ badge.label }}</UBadge>
+              </UTooltip>
+            </template>
+          </UButton>
+        </UChip>
+      </template>
     </div>
+
+    <UDivider label="组合搜索" />
     <div class="mt-[5vh] flex justify-center gap-5 cursor-pointer">
       <UCard v-for="searchEngineGroup in multipleSearchEngines" :key="searchEngineGroup.id" class="w-[25vw]" @click="
         enableOpen(openMulInNewTab)(searchEngineGroup.searchEngines.map(engine => engine.id))
@@ -70,30 +86,29 @@
         </div>
       </UCard>
     </div>
-    <footer class="fixed bottom-0 w-[100vw]">
-      <UCard :ui="{
+  </UContainer>
+  <footer class="fixed bottom-0 w-[100vw]">
+    <UCard :ui="{
         rounded: 'rounded-none rounded-t-lg',
         body: {
           padding: 'px-3 py-4 sm:p-4'
         }
       }">
-        <p class="flex justify-center">
-          <UButton :padded="true" color="gray" variant="link" target="_blank" to="https://wukaipeng.com/">
-            吴楷鹏 &copy; {{ new Date().getFullYear() }}
-          </UButton>
-          <UButton :padded="true" color="gray" variant="link" target="_blank" to="https://wukaipeng.com/">|</UButton>
-          <UButton :padded="true" color="gray" variant="link" target="_blank"
-            to="https://github.com/Penggeor/mul-search">
-            GitHub</UButton>
-        </p>
-      </UCard>
-    </footer>
-  </div>
+      <p class="flex justify-center">
+        <UButton :padded="true" color="gray" variant="link" target="_blank" to="https://wukaipeng.com/">
+          吴楷鹏 &copy; {{ new Date().getFullYear() }}
+        </UButton>
+        <UButton :padded="true" color="gray" variant="link" target="_blank" to="https://wukaipeng.com/">|</UButton>
+        <UButton :padded="true" color="gray" variant="link" target="_blank" to="https://github.com/Penggeor/mul-search">
+          GitHub</UButton>
+      </p>
+    </UCard>
+  </footer>
 </template>
 <script lang="tsx" setup>
 // import IconGoogleLogoSvg from "~/assets/logo/294675_google_icon.svg"
 import { localStorage } from '@boombox/storage';
-import { singularSearchEngines, multipleSearchEngines } from './search-engines'
+import { singularSearchEngines, multipleSearchEngines, verticalPlatforms } from './search-engines'
 
 type SearchSelectItem = {
   value: string
@@ -103,6 +118,8 @@ type SearchSelectItem = {
     text: string
   }
 }
+
+const websites = [...singularSearchEngines, ...verticalPlatforms]
 
 const STORAGE_KEY = 'statistic'
 const storage = (localStorage.getItem(STORAGE_KEY) || {
@@ -147,14 +164,14 @@ async function search(q: string) {
       // Use first item of singularSearchEngines
       aggregateSearchResults.value.push({
         value: q,
-        template: `使用 ${singularSearchEngines[0].title} 搜索 ${q}`,
+        template: `使用 ${websites[0].title} 搜索 ${q}`,
         callback: () => {
-          openInNewTab(singularSearchEngines[0].id)
+          openInNewTab(websites[0].id)
         }
       })
     } else {
       const sortedFrequentUsedSearchEngine = Object.entries(storage.frequentUsedSearchEngine).sort((a, b) => b[1] - a[1])
-      const firstFrequentUsedSearchEngine = singularSearchEngines.find(engine => engine.id === sortedFrequentUsedSearchEngine[0][0])
+      const firstFrequentUsedSearchEngine = websites.find(engine => engine.id === sortedFrequentUsedSearchEngine[0][0])
       aggregateSearchResults.value.push({
         value: q,
         template: `使用 ${firstFrequentUsedSearchEngine!.title} 搜索 ${q}`,
@@ -188,14 +205,6 @@ watch(selected, (newVal) => {
   }
 })
 
-// watch(q, (newVal) => {
-//   if (newVal === '') {
-//     open.value = false
-//   } else {
-//     open.value = true
-//   }
-// })
-
 const handleUpdateQuery = (query: string) => {
   console.log('query', query)
   console.log('selected', selected.value)
@@ -222,7 +231,7 @@ const clear = () => {
 }
 
 const openInNewTab = (id: string) => {
-  const target = singularSearchEngines.find(engine => engine.id === id)
+  const target = websites.find(engine => engine.id === id)
 
   const query = q.value || selected?.value?.value
   if (!query) {
@@ -248,10 +257,10 @@ const openMulInNewTab = (ids: string[]) => {
 }
 </script>
 <style scoped>
-.search-engine-card {
+/* .search-engine-card {
   display: flex;
   flex-wrap: wrap;
-  max-width: 60vw;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   justify-content: center;
@@ -261,6 +270,6 @@ const openMulInNewTab = (ids: string[]) => {
 }
 
 .search-engine-card .card {
-  width: 10vw;
-}
+  width: 10%;
+} */
 </style>
