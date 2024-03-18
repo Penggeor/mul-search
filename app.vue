@@ -1,5 +1,5 @@
 <template>
-  <UContainer>
+  <UContainer class="mb-[100px]">
     <UNotifications />
     <div class="flex flex-col items-center mt-[10vh] mb-[5vh]">
       <UInputMenu type="text" v-model="selected" :query="q" size="xl" :ui="{ icon: { trailing: { pointer: '' } } }"
@@ -70,11 +70,32 @@
       </template>
     </div>
 
+    <UDivider label="AI" />
+    <div class="flex flex-wrap gap-5 justify-center my-10">
+      <template v-for="platform in aiPlatforms" :key="platform.id">
+        <UChip :show="!!platform.chip" :text="platform.chip?.text" :size="platform.chip?.size">
+          <UButton @click="enableOpen(openInNewTab)(platform.id)" size="xl" color="primary" variant="outline">
+            <div class="flex justify-center">
+              {{ platform.title }}
+            </div>
+            <template v-for="(badge, index) in platform.badges" :key="index">
+              <UTooltip>
+                <template #text>
+                  {{ badge.tooltip }}
+                </template>
+                <UBadge>{{ badge.label }}</UBadge>
+              </UTooltip>
+            </template>
+          </UButton>
+        </UChip>
+      </template>
+    </div>
+
     <UDivider label="组合搜索" />
     <div class="mt-[5vh] flex justify-center gap-5 cursor-pointer">
       <UCard v-for="searchEngineGroup in multipleSearchEngines" :key="searchEngineGroup.id" class="w-[25vw]" @click="
-        enableOpen(openMulInNewTab)(searchEngineGroup.searchEngines.map(engine => engine.id))
-        ">
+      enableOpen(openMulInNewTab)(searchEngineGroup.searchEngines.map(engine => engine.id))
+      ">
         <template #header>
           {{ searchEngineGroup.title }}
         </template>
@@ -108,7 +129,7 @@
 <script lang="tsx" setup>
 // import IconGoogleLogoSvg from "~/assets/logo/294675_google_icon.svg"
 import { localStorage } from '@boombox/storage';
-import { singularSearchEngines, multipleSearchEngines, verticalPlatforms } from './search-engines'
+import { singularSearchEngines, multipleSearchEngines, verticalPlatforms, aiPlatforms } from './search-engines'
 
 type SearchSelectItem = {
   value: string
@@ -119,7 +140,7 @@ type SearchSelectItem = {
   }
 }
 
-const websites = [...singularSearchEngines, ...verticalPlatforms]
+const websites = [...singularSearchEngines, ...verticalPlatforms, ...aiPlatforms]
 
 const STORAGE_KEY = 'statistic'
 const storage = (localStorage.getItem(STORAGE_KEY) || {

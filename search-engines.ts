@@ -64,23 +64,50 @@ export const singularSearchEngines: Websites = [
     title: '360 搜索',
     baseQueryUrl: 'https://www.so.com/s?q=',
   },
+  // {
+  //   id: 'perplexity',
+  //   title: 'Perplexity',
+  //   baseQueryUrl: 'https://www.perplexity.ai/',
+  //   chip: {
+  //     text: 'AI',
+  //     size: '2xl',
+  //   },
+  // },
+  // {
+  //   id: 'devv',
+  //   title: 'Devv',
+  //   baseQueryUrl: 'https://devv.ai/search/',
+  //   chip: {
+  //     text: 'AI',
+  //     size: '2xl',
+  //   },
+  //   badges: [
+  //     {
+  //       label: '编程',
+  //       tooltip: '专门面向程序员的 AI 搜索引擎',
+  //     },
+  //   ],
+  // },
+]
+
+export const aiPlatforms: Websites = [
   {
     id: 'perplexity',
     title: 'Perplexity',
     baseQueryUrl: 'https://www.perplexity.ai/',
-    chip: {
-      text: 'AI',
-      size: '2xl',
-    },
+    // chip: {
+    //   text: 'AI',
+    //   size: '2xl',
+    // },
   },
   {
     id: 'devv',
     title: 'Devv',
     baseQueryUrl: 'https://devv.ai/search/',
-    chip: {
-      text: 'AI',
-      size: '2xl',
-    },
+    // chip: {
+    //   text: 'AI',
+    //   size: '2xl',
+    // },
     badges: [
       {
         label: '编程',
@@ -97,9 +124,29 @@ export const verticalPlatforms: Websites = [
     baseQueryUrl: 'https://github.com/search?type=repositories&q=',
   },
   {
+    id: 'x',
+    title: 'X',
+    baseQueryUrl: 'https://x.com/search?q=',
+  },
+  {
+    id: 'v2ex',
+    title: 'V2EX',
+    baseQueryUrl: 'https://www.v2ex.com/?q=',
+  },
+  {
     id: 'zhihu',
     title: '知乎',
     baseQueryUrl: 'https://www.zhihu.com/search?q=',
+  },
+  {
+    id: 'juejin',
+    title: '掘金',
+    baseQueryUrl: 'https://juejin.cn/search?query=',
+  },
+  {
+    id: 'csdn',
+    title: 'CSDN',
+    baseQueryUrl: 'https://so.csdn.net/so/search/s.do?q=',
   },
   {
     id: 'bilibili',
@@ -131,7 +178,7 @@ export const multipleSearchEngines = [
     id: 'ai',
     title: 'AI',
     searchEngines: [
-      ...singularSearchEngines.filter((engine) =>
+      ...aiPlatforms.filter((engine) =>
         ['perplexity', 'devv'].includes(engine.id)
       ),
     ],
