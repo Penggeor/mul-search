@@ -11,7 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@boombox/storage": "^1.0.0",
+    "@boombox/storage": "^1.1.0",
     "@nuxt/ui": "^2.14.2",
     "art-template": "^4.13.2",
     "is-url": "^1.2.4",
